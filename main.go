@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 
 	"github.com/AlecAivazis/survey"
@@ -24,10 +25,29 @@ func exists(filename string) bool {
 }
 
 func getResourcePath() (string, error) {
-	// TODO: 設定ファイルでpath指定
-	if exists("urls.json") {
-		return "urls.json", nil
+	// 0. 引数指定
+	// TODO: 実装
+	// 1. 実行ファイルの近くのjson
+	fileName := "UrlSelector.json"
+	if exists(fileName) {
+		return fileName, nil
 	}
+	// 2. ホームディレクトリのjson
+	// TODO: 存在確認
+	switch runtime.GOOS {
+	case "linux":
+		fileName = filepath.Join(os.Getenv("HOME"), "UrlSelector.json")
+	case "windows":
+		fileName = filepath.Join(os.Getenv("HOMEPATH"), "UrlSelector.json")
+	case "darwin":
+		fileName = filepath.Join(os.Getenv("HOME"), "UrlSelector.json")
+	}
+	if exists(fileName) {
+		return fileName, nil
+	}
+	// 3. 設定ファイルから読み込んだjson
+	// TODO: 実装
+	// 4. エラー
 	return "", errors.New("not found")
 }
 
@@ -78,7 +98,7 @@ func main() {
 
 	roomIndex := 0
 	prompt := &survey.Select{
-		Message: "Choose a room:",
+		Message: "Choose a title:",
 		Options: names,
 		Default: names[0],
 	}
