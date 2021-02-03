@@ -37,17 +37,12 @@ func getResourcePath() (string, error) {
 	if exists(fileName) {
 		return fileName, nil
 	}
-	// 2. 設定ファイルから読み込んだjson
-	// TODO: 実装
-	if exists(fileName) {
-		return fileName, nil
-	}
-	// 3. 環境変数
+	// 2. 環境変数
 	fileName = os.Getenv("URLSELECTOR_CONFIG")
 	if exists(fileName) {
 		return fileName, nil
 	}
-	// 4. ホームディレクトリのjson
+	// 3. ホームディレクトリのjson
 	switch runtime.GOOS {
 	case "linux":
 		fileName = filepath.Join(os.Getenv("HOME"), "UrlSelector.json")
@@ -59,7 +54,7 @@ func getResourcePath() (string, error) {
 	if exists(fileName) {
 		return fileName, nil
 	}
-	// 5. エラー
+	// 4. エラー
 	return "", errors.New("not found")
 }
 
