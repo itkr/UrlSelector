@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -26,14 +27,27 @@ func exists(filename string) bool {
 
 func getResourcePath() (string, error) {
 	// 0. 引数指定
-	// TODO: 実装
-	// 1. 実行ファイルの近くのjson
-	fileName := "UrlSelector.json"
+	flag.Parse()
+	fileName := flag.Arg(0)
 	if exists(fileName) {
 		return fileName, nil
 	}
-	// 2. ホームディレクトリのjson
-	// TODO: 存在確認
+	// 1. 実行ファイルの近くのjson
+	fileName = "UrlSelector.json"
+	if exists(fileName) {
+		return fileName, nil
+	}
+	// 2. 設定ファイルから読み込んだjson
+	// TODO: 実装
+	if exists(fileName) {
+		return fileName, nil
+	}
+	// 3. 環境変数
+	fileName = os.Getenv("URLSELECTOR_CONFIG")
+	if exists(fileName) {
+		return fileName, nil
+	}
+	// 4. ホームディレクトリのjson
 	switch runtime.GOOS {
 	case "linux":
 		fileName = filepath.Join(os.Getenv("HOME"), "UrlSelector.json")
@@ -45,9 +59,7 @@ func getResourcePath() (string, error) {
 	if exists(fileName) {
 		return fileName, nil
 	}
-	// 3. 設定ファイルから読み込んだjson
-	// TODO: 実装
-	// 4. エラー
+	// 5. エラー
 	return "", errors.New("not found")
 }
 
@@ -95,6 +107,8 @@ func main() {
 			names = append(names, zoom.Nanme)
 		}
 	}
+	fullPath, _ := filepath.Abs(resourcePath)
+	fmt.Printf("Config file path: %s\n", fullPath)
 
 	roomIndex := 0
 	prompt := &survey.Select{
