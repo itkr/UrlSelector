@@ -1,5 +1,13 @@
 # UrlSelector
 
+設定したURLをコマンドラインから選択肢してブラウザで開く
+
+## インストール
+
+```sh
+go get github.com/itkr/urlselector
+```
+
 ## URLの設定方法
 
 ### JSONファイルの準備
@@ -27,3 +35,9 @@
 1. 実行コマンドの実態と同じディレクトリの `UrlSelector.json`
 1. 環境変数 `URLSELECTOR_CONFIG` で指定されたファイルパス
 1. ホームディレクトリの `UrlSelector.json`
+
+### 実行
+
+```sh
+urlselector
+```
